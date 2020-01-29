@@ -12,9 +12,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.ttl.grpc.helloworld.GreeterGrpc
-import com.ttl.grpc.helloworld.HelloReply
-import com.ttl.grpc.helloworld.HelloRequest
+import com.ttl.grpc.protocol.LoginOrRegisterResponse
+import com.ttl.grpc.protocol.LoginRequest
+import com.ttl.grpc.protocol.MainGrpc
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import java.io.PrintWriter
@@ -55,27 +55,6 @@ class MainActivity : AppCompatActivity() {
         AsyncTask<String?, Void?, String>() {
         private val activityReference: WeakReference<Activity>
         private var channel: ManagedChannel? = null
-//        protected override fun doInBackground(vararg params: String): String {
-//            val host = params[0]
-//            val message = params[1]
-//            val portStr = params[2]
-//            val port =
-//                if (TextUtils.isEmpty(portStr)) 0 else Integer.valueOf(portStr)
-//            return try {
-//                channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
-//                val stub: GreeterGrpc.GreeterBlockingStub = GreeterGrpc.newBlockingStub(channel)
-//                val request = HelloRequest.newBuilder().setName(message).build()
-//                val reply: HelloReply = stub.sayHello(request)
-//                reply.message
-//            } catch (e: Exception) {
-//                val sw = StringWriter()
-//                val pw = PrintWriter(sw)
-//                e.printStackTrace(pw)
-//                pw.flush()
-//                String.format("Failed... : %n%s", sw)
-//            }
-//        }
-
         override fun onPostExecute(result: String) {
             try {
                 channel!!.shutdown().awaitTermination(1, TimeUnit.SECONDS)
@@ -103,10 +82,10 @@ class MainActivity : AppCompatActivity() {
                 if (TextUtils.isEmpty(portStr)) 0 else Integer.valueOf(portStr)
             return try {
                 channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
-                val stub: GreeterGrpc.GreeterBlockingStub = GreeterGrpc.newBlockingStub(channel)
-                val request = HelloRequest.newBuilder().setName(message).build()
-                val reply: HelloReply = stub.sayHello(request)
-                reply.message
+                val stub: MainGrpc.MainBlockingStub = MainGrpc.newBlockingStub(channel)
+                val request = LoginRequest.newBuilder().setUsername("mirza.arslan").setPassword("12345").build()
+                val reply: LoginOrRegisterResponse = stub.loginOrRegister(request)
+                reply.token
             } catch (e: Exception) {
                 val sw = StringWriter()
                 val pw = PrintWriter(sw)

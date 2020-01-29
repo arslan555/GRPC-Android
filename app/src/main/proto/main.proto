@@ -1,0 +1,39 @@
+syntax  = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ttl.grpc.protocol";
+option java_outer_classname = "Protocol";
+package mainprotocol;
+service Main {
+    rpc register(RegisterRequest) returns (RegisterResponse){}
+    rpc login(LoginRequest) returns (LoginResponse){}
+    rpc LoginOrRegister (LoginRequest) returns (LoginOrRegisterResponse) {
+    }
+}
+message Error{
+    int32 code = 1;
+    string message =2;
+}
+message RegisterRequest{
+    string username = 1;
+    string password = 2;
+}
+message RegisterResponse{
+    Error error = 1;
+    bool is_registered = 2;
+
+}
+message LoginRequest{
+    string username = 1;
+    string password = 2;
+}
+message LoginResponse{
+    Error error = 1;
+    bool logged_in = 2;
+    string token = 3;
+}
+message LoginOrRegisterResponse {
+    Error error = 1;
+    bool logged_in = 2;
+    string token = 3;
+    bool performedRegister = 4;
+}
